@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Tools, Not "AI Friends" — Proposed Workshop</title>
+<meta name="description" content="A proposed workshop on rethinking the personification of AI and designing for user agency and reflection.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14181f;
+    --ink-soft:#3b4250;
+    --paper:#f3f4f1;
+    --paper-raised:#ffffff;
+    --blue:#1c2c4c;
+    --blue-accent:#3b5da6;
+    --amber:#b5741e;
+    --line:#c7c9c2;
+    --line-soft:#dcded8;
+    --max:760px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:'Source Serif 4', serif;
+    font-weight:600;
+    line-height:1.2;
+    margin:0;
+  }
+  p{margin:0 0 1em 0;}
+  a{color:var(--blue-accent);}
+  a:hover{color:var(--amber);}
+  .stamp{
+    font-family:'IBM Plex Mono', monospace;
+    letter-spacing:0.02em;
+  }
+  .wrap{max-width:var(--max); margin:0 auto; padding:0 24px;}
+  .wrap-wide{max-width:920px; margin:0 auto; padding:0 24px;}
+
+  /* ---------- nav ---------- */
+  .site-nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(243,244,241,0.94);
+    backdrop-filter: blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .site-nav .wrap-wide{
+    display:flex; align-items:center; justify-content:space-between;
+    height:56px;
+  }
+  .site-nav .brand{
+    font-family:'Source Serif 4', serif;
+    font-weight:600;
+    font-size:15px;
+    white-space:nowrap;
+  }
+  .site-nav .brand span{color:var(--amber);}
+  .site-nav ul{
+    list-style:none; display:flex; gap:22px; margin:0; padding:0;
+  }
+  .site-nav a{
+    color:var(--ink-soft);
+    text-decoration:none;
+    font-size:14px;
+    letter-spacing:0.01em;
+  }
+  .site-nav a:hover{color:var(--blue-accent);}
+  .nav-toggle{display:none;}
+  .nav-toggle-label{display:none;}
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    background:var(--blue);
+    color:#eef0f4;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.055) 1px, transparent 1px);
+    background-size:32px 32px;
+    padding:76px 0 0 0;
+    overflow:hidden;
+  }
+  .hero::before,.hero::after,
+  .crosshair{
+    content:"";
+    position:absolute;
+    width:18px; height:18px;
+    border-left:1px solid rgba(255,255,255,0.45);
+    border-top:1px solid rgba(255,255,255,0.45);
+  }
+  .crosshair{border:0;}
+  .crosshair::before,.crosshair::after{
+    content:"";
+    position:absolute;
+    background:rgba(255,255,255,0.5);
+  }
+  .crosshair::before{width:13px; height:1px; top:6px; left:0;}
+  .crosshair::after{width:1px; height:13px; top:0; left:6px;}
+  .crosshair.tl{top:18px; left:18px;}
+  .crosshair.tr{top:18px; right:18px;}
+
+  .hero-inner{position:relative; max-width:var(--max); margin:0 auto; padding:44px 24px 0;}
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:0.03em;
+    color:#a9c1e8;
+    margin-bottom:18px;
+  }
+  .eyebrow .dot{color:#e0a75c;}
+  .hero h1{
+    font-size:clamp(30px, 5.4vw, 46px);
+    color:#fff;
+    max-width:12.5em;
+  }
+  .hero h1 em{
+    font-style:italic;
+    color:#e0a75c;
+  }
+  .hero .dek{
+    font-size:18px;
+    color:#c6cee3;
+    max-width:34em;
+    margin-top:20px;
+    font-family:'Source Serif 4', serif;
+    font-style:italic;
+  }
+  .tags{margin-top:26px; display:flex; flex-wrap:wrap; gap:10px;}
+  .tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    border:1px solid rgba(255,255,255,0.32);
+    color:#d7dce8;
+    padding:5px 10px;
+    letter-spacing:0.02em;
+  }
+  .tag.status{border-color:#e0a75c; color:#f0c689;}
+
+  /* title block, engineering-drawing style */
+  .titleblock{
+    margin-top:46px;
+    border-top:1px solid rgba(255,255,255,0.25);
+  }
+  .titleblock .wrap-wide{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+  }
+  .tb-cell{
+    padding:14px 18px;
+    border-right:1px solid rgba(255,255,255,0.18);
+    border-bottom:1px solid rgba(255,255,255,0.18);
+  }
+  .tb-cell:last-child{border-right:none;}
+  .tb-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:0.06em;
+    color:#8ea2c9;
+    text-transform:uppercase;
+    margin-bottom:5px;
+  }
+  .tb-value{font-size:14px; color:#eef0f4;}
+
+  /* ---------- main sections ---------- */
+  main{background:var(--paper);}
+  section{
+    padding:54px 0;
+    border-bottom:1px solid var(--line-soft);
+  }
+  section:last-of-type{border-bottom:none;}
+  .kicker{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.05em;
+    color:var(--amber);
+    margin-bottom:10px;
+  }
+  h2.section-title{
+    font-size:26px;
+    margin-bottom:22px;
+  }
+  section p{color:var(--ink-soft); max-width:66ch;}
+  section p.lede{
+    font-size:18.5px;
+    color:var(--ink);
+    font-family:'Source Serif 4', serif;
+  }
+
+  .exhibit{
+    margin:26px 0;
+    border:1px solid var(--line);
+    background:var(--paper-raised);
+    padding:22px 24px;
+    position:relative;
+  }
+  .exhibit-tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.04em;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    margin-bottom:10px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .exhibit-tag::before{
+    content:"";
+    width:8px; height:8px;
+    border:1px solid var(--amber);
+  }
+  .exhibit blockquote{
+    margin:0;
+    font-family:'Source Serif 4', serif;
+    font-style:italic;
+    font-size:18px;
+    color:var(--ink);
+    line-height:1.55;
+  }
+  .exhibit cite{
+    display:block;
+    margin-top:12px;
+    font-style:normal;
+    font-size:13.5px;
+    color:var(--ink-soft);
+  }
+
+  /* questions */
+  .qlist{
+    display:grid;
+    gap:14px;
+    margin-top:22px;
+  }
+  .qrow{
+    display:grid;
+    grid-template-columns:64px 1fr;
+    border:1px solid var(--line);
+    background:var(--paper-raised);
+  }
+  .qrow .qid{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:14px;
+    color:var(--blue-accent);
+    display:flex; align-items:center; justify-content:center;
+    border-right:1px solid var(--line);
+    background:#eceef3;
+  }
+  .qrow p{
+    margin:0; padding:16px 18px;
+    color:var(--ink);
+    font-size:16px;
+  }
+
+  /* activities */
+  .activity{
+    padding:22px 0;
+    border-top:1px solid var(--line-soft);
+    display:grid;
+    grid-template-columns:200px 1fr;
+    gap:28px;
+  }
+  .activity:first-of-type{border-top:none;}
+  .activity h3{
+    font-size:17px;
+    color:var(--ink);
+  }
+  .activity .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--amber);
+    display:block;
+    margin-bottom:6px;
+  }
+  .activity p{color:var(--ink-soft); font-size:15.5px;}
+
+  /* outcomes */
+  .outcomes{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    margin-top:22px;
+  }
+  .outcome{
+    background:var(--paper-raised);
+    padding:22px 20px;
+  }
+  .outcome .tb-label{color:var(--amber);}
+  .outcome h4{
+    font-family:'Source Serif 4', serif;
+    font-size:16.5px;
+    font-weight:600;
+    margin:8px 0 8px;
+  }
+  .outcome p{font-size:14.5px; margin:0; color:var(--ink-soft);}
+
+  /* CFP formats */
+  .formats{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+    margin-top:22px;
+  }
+  .format{
+    border:1px solid var(--line);
+    background:var(--paper-raised);
+    padding:22px;
+    position:relative;
+  }
+  .format .crosshair{position:absolute; border:0;}
+  .format .crosshair::before,.format .crosshair::after{background:var(--line);}
+  .format .crosshair.tl{top:-1px; left:-1px;}
+  .format-name{
+    font-family:'Source Serif 4', serif;
+    font-size:19px;
+    font-weight:600;
+    margin-bottom:6px;
+  }
+  .format-meta{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--amber);
+    margin-bottom:12px;
+  }
+  .format p{font-size:14.5px; color:var(--ink-soft);}
+
+  /* dates table */
+  .dates{
+    margin-top:22px;
+    border:1px solid var(--line);
+    background:var(--paper-raised);
+  }
+  .date-row{
+    display:grid;
+    grid-template-columns:220px 1fr auto;
+    align-items:center;
+    padding:14px 18px;
+    border-top:1px solid var(--line-soft);
+    gap:12px;
+  }
+  .date-row:first-child{border-top:none;}
+  .date-row .d{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:14px;
+    color:var(--blue-accent);
+  }
+  .date-row .what{font-size:15px; color:var(--ink);}
+  .date-row .flag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    border:1px solid var(--line);
+    padding:3px 8px;
+    white-space:nowrap;
+  }
+  .date-row .flag.confirmed{color:#3a7a4a; border-color:#3a7a4a55;}
+  .date-row .flag.tba{color:var(--amber); border-color:var(--amber);}
+
+  /* organizers */
+  .organizers{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:18px;
+    margin-top:22px;
+  }
+  .organizer{
+    border-left:2px solid var(--blue-accent);
+    padding:4px 0 4px 16px;
+  }
+  .organizer .name{
+    font-family:'Source Serif 4', serif;
+    font-weight:600;
+    font-size:16.5px;
+  }
+  .organizer .aff{font-size:13.5px; color:var(--ink-soft); margin:4px 0;}
+  .organizer a{font-size:13.5px; font-family:'IBM Plex Mono', monospace;}
+
+  /* contact / footer */
+  footer{
+    background:var(--blue);
+    color:#c6cee3;
+    padding:40px 0 34px;
+  }
+  footer .wrap{
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:18px;
+  }
+  footer p{color:#a9b3cc; font-size:13.5px; max-width:44ch; margin:0;}
+  footer a{color:#e0a75c;}
+  footer .fmark{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:#7f8db3;
+  }
+
+  @media (max-width:760px){
+    .titleblock .wrap-wide{grid-template-columns:repeat(2,1fr);}
+    .activity{grid-template-columns:1fr; gap:8px;}
+    .outcomes{grid-template-columns:1fr;}
+    .formats{grid-template-columns:1fr;}
+    .organizers{grid-template-columns:1fr;}
+    .date-row{grid-template-columns:1fr; row-gap:4px;}
+    .site-nav ul{display:none;}
+    .nav-toggle-label{
+      display:block; cursor:pointer;
+      font-family:'IBM Plex Mono', monospace; font-size:13px;
+      border:1px solid var(--line); padding:6px 10px;
+    }
+    .nav-toggle:checked ~ .wrap-wide ul{
+      display:flex; flex-direction:column;
+      position:absolute; top:56px; left:0; right:0;
+      background:var(--paper); border-bottom:1px solid var(--line);
+      padding:14px 24px; gap:14px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap-wide">
+    <div class="brand">AI Tools, Not <span>"AI Friends"</span></div>
+    <input type="checkbox" id="nav-toggle" class="nav-toggle">
+    <label for="nav-toggle" class="nav-toggle-label">Menu</label>
+    <ul>
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#questions">Questions</a></li>
+      <li><a href="#activities">Activities</a></li>
+      <li><a href="#cfp">Participate</a></li>
+      <!-- <li><a href="#dates">Dates</a></li> -->
+      <li><a href="#organizers">Organizers</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero">
+  <span class="crosshair tl"></span>
+  <span class="crosshair tr"></span>
+  <div class="hero-inner">
+    <div class="eyebrow">PROPOSED WORKSHOP</div>
+    <h1>AI Tools, Not <em>“AI Friends”</em></h1>
+    <p class="dek">Rethinking the personification of AI, and designing for increased user agency and reflection.</p>
+    <div class="tags">
+      <span class="tag status">Proposed workshop</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <section id="overview">
+    <div class="wrap">
+      <div class="kicker">01 — OVERVIEW</div>
+      <h2 class="section-title">Can we design AI as something other than a “friend”?</h2>
+      <p class="lede">AI interfaces have largely been built around two choices: limiting interaction to chat, and marketing AI as a friend, coach, or teammate. This workshop asks whether those choices actually serve the people using these systems — or whether they quietly cost them agency, reflection, and accountability.</p>
+      <p>The development of AI interfaces has been driven mostly by tech companies and the AI community, and has converged on personifying AI: introducing it as a companion that listens, remembers, and talks back. Recent HCI research has begun documenting what this framing costs — emotional dependence on personified systems, susceptibility to affect-laden deceptive design, and a quiet shift of accountability away from developers and onto the “person” the system pretends to be.</p>
+      <div class="exhibit">
+        <div class="exhibit-tag">Exhibit — marketing copy for a commercial AI wearable</div>
+        <blockquote>“friend is a wearable companion. Worn on a necklace, always listening. Every friend is born with their own voice and personality. Talk back and forth out loud, or text privately in the friend app.”</blockquote>
+        <cite>Cited in the workshop proposal as representative of the personification trend under discussion.</cite>
+      </div>
+      <p>At the same time, most AI products have narrowed interaction down to a chat bar or a voice icon — a small amount of real estate for a wide range of work. That narrowing can produce a “keyhole effect”: users lose track of context, are forced to verbalize things that would be easier to point at or arrange, and get less room for the kind of epistemic action that richer interfaces allow. It also runs against decades of HCI work on design friction, seamful design, slow technology, and reflective design — work that treats moments of resistance and visibility as features, not bugs, of a well-designed system.</p>
+      <p>This workshop brings the HCI community together to ask how design research that predates the current wave of AI products — on friction, reflection, seams, and pace — could be applied to it, and what alternative metaphors for AI might look like once “friend” is off the table.</p>
+    </div>
+  </section>
+
+  <section id="questions">
+    <div class="wrap">
+      <div class="kicker">02 — GUIDING QUESTIONS</div>
+      <h2 class="section-title">What the workshop sets out to answer</h2>
+      <p>Four questions structure the day and its outputs:</p>
+      <div class="qlist">
+        <div class="qrow"><div class="qid">Q1</div><p>What design goals should we seek, as a community, for AI systems?</p></div>
+        <div class="qrow"><div class="qid">Q2</div><p>How do we define the role of AI in human-AI collaboration?</p></div>
+        <div class="qrow"><div class="qid">Q3</div><p>How could we change the AI interaction interface to meet those design goals?</p></div>
+        <div class="qrow"><div class="qid">Q4</div><p>Should we de-personify AI — and if so, how should we go about it?</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="activities">
+    <div class="wrap">
+      <div class="kicker">03 — WORKSHOP DESIGN</div>
+      <h2 class="section-title">Three activities, one shared roadmap</h2>
+
+      <div class="activity">
+        <div>
+          <span class="num">Activity I</span>
+          <h3>Bringing in design concepts</h3>
+        </div>
+        <p>Participants bring existing HCI concepts that are rarely applied to today's AI interfaces — design friction, seamful design, slow technology, and reflective design are starting points, not the full list. The goal is a shared set of design lenses to draw on for the rest of the day, and for future work, rather than reinventing these ideas from scratch.</p>
+      </div>
+
+      <div class="activity">
+        <div>
+          <span class="num">Activity II</span>
+          <h3>AI metaphors beyond personhood</h3>
+        </div>
+        <p>Small groups generate alternative metaphors for AI that don't rely on framing it as a person, friend, coach, or teammate — drawing instead on tools, instruments, environments, or non-human collaborators. Groups share their metaphors with the full workshop and critique the benefits and drawbacks of designing around each one.</p>
+      </div>
+
+      <div class="activity">
+        <div>
+          <span class="num">Activity III</span>
+          <h3>Brainstorming design goals &amp; best practices</h3>
+        </div>
+        <p>Building on the concepts and metaphors surfaced earlier, participants collaboratively draft concrete design goals and best practices. The organizers propose prioritizing user agency, reflection, and transparency over engagement or efficiency alone — but the goal list itself is built together with participants.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="outcomes">
+    <div class="wrap">
+      <div class="kicker">04 — AFTER THE WORKSHOP</div>
+      <h2 class="section-title">What the workshop aims to produce</h2>
+      <div class="outcomes">
+        <div class="outcome">
+          <div class="tb-label">Output 1</div>
+          <h4>A research agenda</h4>
+          <p>Focused on AI that serves the end user, rather than one optimized for engagement or business needs alone.</p>
+        </div>
+        <div class="outcome">
+          <div class="tb-label">Output 2</div>
+          <h4>Cross-institution collaboration</h4>
+          <p>Connecting researchers who are independently working to redesign AI interactions and interfaces.</p>
+        </div>
+        <div class="outcome">
+          <div class="tb-label">Output 3</div>
+          <h4>Published best practices</h4>
+          <p>A set of design best practices for AI systems, with interested participants invited to co-author.</p>
+        </div>
+      </div>
+      <p style="margin-top:18px; font-size:14.5px;">As a follow-up, organizers and interested participants plan to publish a paper summarizing the workshop's outcomes, metaphors, and best practices, and to pursue a journal special issue for the submitted short papers.</p>
+    </div>
+  </section>
+
+  <section id="cfp">
+    <div class="wrap">
+      <div class="kicker">05 — CALL FOR PARTICIPATION</div>
+      <h2 class="section-title">How to apply</h2>
+      <p>Applicants may submit in one of two formats. The statement-of-interest track will only open if the short-paper track does not fill the workshop.</p>
+      <div class="formats">
+        <div class="format">
+          <span class="crosshair tl"></span>
+          <div class="format-name">Short paper</div>
+          <div class="format-meta">4 pages, excl. references · single or multi-author</div>
+          <p>Explores AI design paradigms, user perceptions of AI interfaces or interactions, or related topics. Accepted papers will be published on the workshop website.</p>
+        </div>
+        <div class="format">
+          <span class="crosshair tl"></span>
+          <div class="format-name">Statement of interest</div>
+          <div class="format-meta">1–2 pages · single author</div>
+          <p>A brief statement of interest in the topic and reasons for joining the workshop. Opens only if the short-paper track is undersubscribed.</p>
+        </div>
+      </div>
+      <p style="margin-top:20px; font-size:14.5px;">Accepted participants will take part in two pre-workshop activities: reviewing a shared list of design methodologies compiled from all submissions, and introducing themselves in a shared working document to help form groups around common interests.</p>
+    </div>
+  </section>
+
+  <!-- <section id="dates">
+    <div class="wrap">
+      <div class="kicker">06 — IMPORTANT DATES</div>
+      <h2 class="section-title">Key dates</h2>
+      <div class="dates">
+        <div class="date-row">
+          <div class="d">TBA</div>
+          <div class="what">Host venue &amp; workshop date</div>
+          <div class="flag tba">TBA</div>
+        </div>
+        <div class="date-row">
+          <div class="d">TBA</div>
+          <div class="what">Submission deadline for short papers &amp; statements of interest</div>
+          <div class="flag tba">TBA</div>
+        </div>
+        <!-- <div class="date-row">
+          <div class="d">TBA</div>
+          <div class="what">Notification of acceptance</div>
+          <div class="flag tba">TBA</div>
+        </div> -->
+      </div>
+      <p style="margin-top:14px; font-size:13.5px; color:var(--ink-soft);">This is a proposed workshop; it has not yet been attached to a specific conference. Venue, dates, and submission deadlines will be posted here once confirmed.</p>
+    </div>
+  </section> -->
+
+  <section id="organizers">
+    <div class="wrap">
+      <div class="kicker">07 — ORGANIZERS</div>
+      <h2 class="section-title">Workshop organizers</h2>
+      <div class="organizers">
+        <div class="organizer">
+          <div class="name">Nazanin Sabri</div>
+          <div class="aff">University of California San Diego</div>
+          <a href="mailto:nsabri@ucsd.edu">nsabri@ucsd.edu</a>
+        </div>
+        <div class="organizer">
+          <div class="name">Jeongeon Park</div>
+          <div class="aff">University of California San Diego</div>
+          <a href="mailto:jep034@ucsd.edu">jep034@ucsd.edu</a>
+        </div>
+        <div class="organizer">
+          <div class="name">Nadir Weibel</div>
+          <div class="aff">University of California San Diego</div>
+          <a href="mailto:weibel@ucsd.edu">weibel@ucsd.edu</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>This is a proposed workshop and is not yet affiliated with a confirmed conference.</p>
+  </div>
+</footer>
+
+</body>
+</html>
